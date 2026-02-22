@@ -6,3 +6,4 @@ python-dotenv
 matplotlib
 numpy
 openai
+python-multipart
