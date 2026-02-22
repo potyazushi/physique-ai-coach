@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Physique AI Coach</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#0b0b0b;
+  --panel:#121212;
+  --gold:#d4af37;
+  --gold-soft:#f5d76e;
+  --text:#f5f5f5;
+  --muted:#bdbdbd;
+  --line:#2a2a2a;
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:"Noto Serif JP", serif;
+  background:var(--bg);
+  color:var(--text);
+  overflow-x:hidden;
+}
+
+/* 背景グロー */
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:
+    radial-gradient(circle at 20% 30%, rgba(212,175,55,0.12), transparent 60%),
+    radial-gradient(circle at 80% 70%, rgba(212,175,55,0.10), transparent 60%);
+  animation:glow 14s infinite alternate ease-in-out;
+  z-index:-1;
+}
+@keyframes glow{
+  from{transform:scale(1);}
+  to{transform:scale(1.12);}
+}
+
+.wrap{
+  max-width:1100px;
+  margin:auto;
+  padding:40px 20px 60px;
+}
+
+/* ナビ */
+.nav{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:50px;
+  flex-wrap:wrap;
+  gap:20px;
+}
+
+.brand{
+  display:flex;
+  flex-direction:column;
+}
+
+.brand-title{
+  font-family:"Cormorant Garamond", serif;
+  font-size:28px;
+  color:var(--gold);
+  letter-spacing:2px;
+}
+
+.brand-sub{
+  font-size:12px;
+  color:var(--muted);
+}
+
+.nav-buttons{
+  display:flex;
+  gap:15px;
+}
+
+.btn{
+  padding:14px 22px;
+  font-weight:600;
+  text-decoration:none;
+  border-radius:6px;
+  transition:0.3s;
+  text-align:center;
+  min-width:180px;
+}
+
+.btn-primary{
+  background:linear-gradient(180deg,var(--gold-soft),var(--gold));
+  color:#111;
+  box-shadow:0 10px 25px rgba(212,175,55,0.3);
+}
+
+.btn-primary:hover{
+  transform:translateY(-3px);
+  box-shadow:0 15px 35px rgba(212,175,55,0.5);
+}
+
+.btn-outline{
+  border:1px solid var(--line);
+  color:var(--text);
+}
+
+.btn-outline:hover{
+  border-color:var(--gold);
+  color:var(--gold);
+}
+
+/* HERO */
+.hero{
+  margin-bottom:70px;
+}
+
+.hero h1{
+  font-size:clamp(28px, 6vw, 48px);
+  line-height:1.4;
+  margin-bottom:25px;
+}
+
+.hero h1 span{
+  font-family:"Cormorant Garamond", serif;
+  color:var(--gold);
+  font-size:clamp(34px, 7vw, 60px);
+}
+
+.hero p{
+  color:var(--muted);
+  font-size:clamp(14px, 3.5vw, 16px);
+  line-height:1.9;
+  max-width:700px;
+  margin-bottom:35px;
+}
+
+.cta-row{
+  display:flex;
+  gap:20px;
+  flex-wrap:wrap;
+}
+
+/* 特徴 */
+.features{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:25px;
+}
+
+.card{
+  background:var(--panel);
+  border:1px solid var(--line);
+  padding:28px;
+  border-radius:8px;
+  transition:0.4s;
+}
+
+.card:hover{
+  border-color:var(--gold);
+  box-shadow:0 12px 30px rgba(212,175,55,0.2);
+}
+
+.card h3{
+  color:var(--gold-soft);
+  margin-bottom:15px;
+  font-size:18px;
+}
+
+.card p{
+  font-size:14px;
+  line-height:1.8;
+  color:var(--muted);
+}
+
+/* フッター */
+.footer{
+  margin-top:80px;
+  padding-top:20px;
+  border-top:1px solid var(--line);
+  font-size:12px;
+  color:var(--muted);
+  display:flex;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:10px;
+}
+
+/* 📱 スマホ最適 */
+@media (max-width: 768px){
+
+  .nav{
+    flex-direction:column;
+    align-items:flex-start;
+  }
+
+  .nav-buttons{
+    width:100%;
+    flex-direction:column;
+  }
+
+  .btn{
+    width:100%;
+  }
+
+  .cta-row{
+    flex-direction:column;
+  }
+
+  .features{
+    grid-template-columns:1fr;
+  }
+
+  .wrap{
+    padding:30px 18px 50px;
+  }
+
+  .hero{
+    margin-bottom:50px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="wrap">
+
+  <div class="nav">
+    <div class="brand">
+      <div class="brand-title">Physique AI Coach</div>
+      <div class="brand-sub">フィジーク減量AIコーチ（開発中）</div>
+    </div>
+
+    <div class="nav-buttons">
+      <a href="/coach" class="btn btn-outline">ダッシュボード</a>
+      <a href="/coach" class="btn btn-primary">今日もコーチに相談する</a>
+    </div>
+  </div>
+
+  <div class="hero">
+    <h1>
+      「減量の迷い」を、<br>
+      <span>ロジック</span>で断ち切る。
+    </h1>
+    <p>
+      体重・体脂肪・摂取カロリー・体型画像を統合し、
+      あなたの現在地と大会までの距離を可視化。
+      今週やるべき行動を、明確に提示します。
+    </p>
+
+    <div class="cta-row">
+      <a href="/coach" class="btn btn-primary">今すぐコーチを開始する</a>
+      <a href="/coach" class="btn btn-outline">記録を確認・編集する</a>
+    </div>
+  </div>
+
+  <div class="features">
+    <div class="card">
+      <h3>数値の信頼性を最優先</h3>
+      <p>
+        日次正規化・回帰推定・異常値制御を実装。
+        現実的な予測のみを提示します。
+      </p>
+    </div>
+
+    <div class="card">
+      <h3>競技者目線の具体アクション</h3>
+      <p>
+        画像と数値を統合し、
+        筋量維持・有酸素・カロリー戦略を具体化。
+      </p>
+    </div>
+
+    <div class="card">
+      <h3>継続できる記録設計</h3>
+      <p>
+        入力ミスも即修正。
+        本番まで一貫した減量管理を実現。
+      </p>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div>© Physique AI Coach</div>
+    <div>Next: マルチ画像対応 / 認証 / SaaS化</div>
+  </div>
+
+</div>
+
+</body>
+</html>

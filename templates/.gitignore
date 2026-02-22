@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+.env
+physique.db
+venv/
+static/uploads/
+static/weight_chart.png

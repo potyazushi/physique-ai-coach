@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Physique AI Coach</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#0b0b0b;
+  --panel:#121212;
+  --gold:#d4af37;
+  --gold-soft:#f5d76e;
+  --text:#f5f5f5;
+  --muted:#bdbdbd;
+  --line:#2a2a2a;
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:"Noto Serif JP", serif;
+  background:var(--bg);
+  color:var(--text);
+}
+
+.header{
+  padding:20px;
+  border-bottom:1px solid var(--line);
+}
+
+.header h1{
+  font-family:"Cormorant Garamond", serif;
+  font-size:28px;
+  color:var(--gold);
+  margin:0;
+  text-align:center;
+}
+
+.container{
+  max-width:900px;
+  margin:auto;
+  padding:20px;
+}
+
+/* カード */
+.card{
+  background:var(--panel);
+  border:1px solid var(--line);
+  padding:25px;
+  margin-bottom:25px;
+  border-radius:6px;
+}
+
+/* フォーム */
+label{
+  display:block;
+  margin-top:15px;
+  font-size:14px;
+  color:var(--muted);
+}
+
+input{
+  width:100%;
+  padding:12px;
+  margin-top:5px;
+  background:#1a1a1a;
+  border:1px solid var(--line);
+  color:var(--text);
+  font-size:16px;
+}
+
+button{
+  margin-top:20px;
+  padding:14px;
+  width:100%;
+  background:linear-gradient(180deg,var(--gold-soft),var(--gold));
+  color:#111;
+  border:none;
+  font-size:16px;
+  font-weight:600;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+button:hover{
+  transform:translateY(-2px);
+  box-shadow:0 10px 25px rgba(212,175,55,0.3);
+}
+
+/* ローディング */
+.loading{
+  display:none;
+  margin-top:15px;
+  text-align:center;
+  color:var(--gold-soft);
+}
+
+.spinner{
+  width:22px;
+  height:22px;
+  border:3px solid rgba(255,255,255,0.2);
+  border-top:3px solid var(--gold);
+  border-radius:50%;
+  display:inline-block;
+  animation:spin 0.8s linear infinite;
+  margin-right:8px;
+}
+
+@keyframes spin{
+  to{transform:rotate(360deg);}
+}
+
+/* 画像プレビュー */
+.preview{
+  margin-top:15px;
+  display:none;
+  text-align:center;
+}
+
+.preview img{
+  width:100%;
+  max-width:280px;
+  border:1px solid var(--line);
+  border-radius:6px;
+  margin-top:10px;
+}
+
+/* 結果 */
+.metric{
+  margin-bottom:10px;
+  font-size:15px;
+}
+
+.result{
+  white-space:pre-wrap;
+  line-height:1.8;
+  font-size:14px;
+  color:var(--muted);
+  margin-top:15px;
+}
+
+/* 📱 モバイル最適化 */
+@media (max-width: 600px){
+
+  .header h1{
+    font-size:22px;
+  }
+
+  .card{
+    padding:18px;
+  }
+
+  input{
+    font-size:16px;
+  }
+
+  button{
+    font-size:16px;
+    padding:14px;
+  }
+
+  .metric{
+    font-size:14px;
+  }
+
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+  <h1>Physique AI Coach</h1>
+</div>
+
+<div class="container">
+
+  <div class="card">
+    <form id="coachForm">
+
+      <label>体重 (kg)</label>
+      <input type="number" step="0.1" name="weight" required>
+
+      <label>体脂肪 (%)</label>
+      <input type="number" step="0.1" name="body_fat">
+
+      <label>摂取カロリー (kcal)</label>
+      <input type="number" name="calorie">
+
+      <label>体型画像</label>
+      <input type="file" name="image" id="imageInput" accept="image/*">
+
+      <div class="preview" id="imagePreview">
+        <div>選択した画像:</div>
+        <img id="previewImg">
+      </div>
+
+      <button type="submit" id="submitBtn">AIコーチに送信</button>
+
+      <div class="loading" id="loading">
+        <span class="spinner"></span>
+        AI分析中…
+      </div>
+
+    </form>
+  </div>
+
+  <div class="card">
+    <div class="metric">減量スコア: <span id="score">-</span></div>
+    <div class="metric">大会まで残り: <span id="weeks">-</span></div>
+    <div class="metric">週間減少率: <span id="weekly">-</span></div>
+    <div class="metric">予測体重: <span id="predict">-</span></div>
+    <div class="result" id="resultText"></div>
+  </div>
+
+</div>
+
+<script>
+const form = document.getElementById("coachForm");
+const loading = document.getElementById("loading");
+const submitBtn = document.getElementById("submitBtn");
+const imageInput = document.getElementById("imageInput");
+const imagePreview = document.getElementById("imagePreview");
+const previewImg = document.getElementById("previewImg");
+
+imageInput.addEventListener("change", function(){
+  const file = this.files[0];
+  if(file){
+    const reader = new FileReader();
+    reader.onload = function(e){
+      previewImg.src = e.target.result;
+      imagePreview.style.display = "block";
+    };
+    reader.readAsDataURL(file);
+  }
+});
+
+form.addEventListener("submit", async function(e){
+  e.preventDefault();
+
+  loading.style.display = "block";
+  submitBtn.disabled = true;
+
+  const formData = new FormData(form);
+
+  const res = await fetch("/api/coach", {
+    method:"POST",
+    body:formData
+  });
+
+  const data = await res.json();
+
+  document.getElementById("score").innerText = data.cut_score + "点";
+  document.getElementById("weeks").innerText = data.weeks_out + "週";
+  document.getElementById("weekly").innerText = data.weekly_drop_pct + "%";
+  document.getElementById("predict").innerText = data.predicted_weight + "kg";
+
+  let text = "";
+
+  if(data.ai){
+    if(data.ai.observations){
+      text += "【観察】\n" + data.ai.observations.join("\n") + "\n\n";
+    }
+    if(data.ai.actions){
+      text += "【今週のアクション】\n" + data.ai.actions.join("\n") + "\n\n";
+    }
+    if(data.ai.uncertainty_note){
+      text += "【補足】\n" + data.ai.uncertainty_note;
+    }
+  }
+
+  document.getElementById("resultText").innerText = text;
+
+  loading.style.display = "none";
+  submitBtn.disabled = false;
+});
+</script>
+
+</body>
+</html>
