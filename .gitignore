@@ -1,0 +1,18 @@
+# Python
+__pycache__/
+*.pyc
+venv/
+
+# Database
+physique.db
+
+# Environment
+.env
+
+# Generated files
+static/uploads/
+static/weight_chart.png
+
+# OS
+.DS_Store
+Thumbs.db
