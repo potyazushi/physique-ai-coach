@@ -7,3 +7,5 @@ matplotlib
 numpy
 openai
 python-multipart
+python-jose
+passlib[bcrypt]
